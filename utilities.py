@@ -57,6 +57,8 @@ def read_companys_dataset(dataset_path: str="CompanyDataset/example.pcap_Flow.cs
     replace_func = lambda old_name: corrected_column_names.get(old_name, old_name)
 
     company_dfcols = company_df.columns.map(lambda x: replace_func(x))
+    company_df.columns = company_dfcols
+    
     company_cols_set = set(company_dfcols)
 
     base_cols_set = set(base_df.columns)
