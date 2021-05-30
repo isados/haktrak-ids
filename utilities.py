@@ -3,19 +3,17 @@ import pandas as pd
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
-def read_base_dataset(dataset_path: str, version: int=2018) -> pd.DataFrame:
-    base_df = pd.read_csv(dataset_path)
 
-    if version == 2018:
-        pass
+def read_base_dataset(version: str="2018") -> pd.DataFrame:
+    if version == "2018":
+        base_df = pd.read_csv(base2018path)
     else:
-        if dataset_path is None:
-            dataset_path = "CIC_IDS2017_Dataset/MachineLearningCVE/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
+        base_df = pd.read_csv(base2017path)
         # Clear extra whitespace within the columns
         base_df.columns = base_df.columns.map(lambda x : x.strip())
         # Remove unnecessary column
         base_df.drop('Fwd Header Length.1', axis=1, inplace=True)
-
+    
     return base_df
 
 def read_companys_dataset2017(dataset_path: str="CompanyDataset/example.pcap_Flow.csv") -> pd.DataFrame:
@@ -144,3 +142,8 @@ def get_configs(config_file: str="config.yml") -> dict:
     except yaml.YAMLError as ymlexcp:
         print(ymlexcp)
         return None
+
+vars = get_configs()
+company_dataset_path = vars["CompanyDataset"]["fullsize"]
+base2017path = vars["BaseDataset"]["2017"]
+base2018path = vars["BaseDataset"]["2018"]
