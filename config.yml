@@ -1,0 +1,9 @@
+---
+CompanyDataset: 
+  rootpath: CompanyDataset
+  fullsize: CompanyDataset/haktrak.csv
+  sample: CompanyDataset/example.pcap_Flow.csv
+
+BaseDataset:
+  "2017": "CIC_IDS2017_Dataset/MachineLearningCVE/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
+  "2018": "/home/haktrak/Public/DDosHOIC.csv"
