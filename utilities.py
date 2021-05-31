@@ -1,4 +1,5 @@
 import yaml
+import os
 import pandas as pd
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
@@ -16,7 +17,13 @@ def read_base_dataset(version: str="2018") -> pd.DataFrame:
     
     return base_df
 
-def read_companys_dataset2017() -> pd.DataFrame:
+def check_for_valid_dataset(path):
+    if os.path.exists(path):
+        return path
+    print("Invalid file path to dataset, switching to company's dataset to predict on...")
+    return get_configs()['CompanyDataset']['fullsize']
+        
+def read_companys_dataset2017(path) -> pd.DataFrame:
 
     base_df = pd.read_csv(vars["BaseDataset"]["2017"])
 
@@ -27,7 +34,8 @@ def read_companys_dataset2017() -> pd.DataFrame:
     base_df.drop('Fwd Header Length.1', axis=1, inplace=True)
 
     # ### Company's dataset
-    company_df = pd.read_csv(vars["CompanyDataset"]["fullsize"])
+    path = check_for_valid_dataset(path)
+    company_df = pd.read_csv(path)
 
     # Before processing columns
     print("Number of Base Dataset Columns:", len(base_df.columns))
@@ -71,10 +79,11 @@ def read_companys_dataset2017() -> pd.DataFrame:
 
     return company_df
 
-def read_companys_dataset2018() -> pd.DataFrame:
+def read_companys_dataset2018(path) -> pd.DataFrame:
 
     base_df = pd.read_csv(vars["BaseDataset"]["2018"])
-    company_df = pd.read_csv(vars["CompanyDataset"]["fullsize"])
+    path = check_for_valid_dataset(path)
+    company_df = pd.read_csv(path)
 
     # Make Comparison
 

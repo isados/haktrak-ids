@@ -4,11 +4,12 @@ import pandas as pd
 import joblib
 from utilities import read_companys_dataset2018
 
+PATH_TO_CSV = ""
 MODEL_PATH = "knnmodel.pkl"
 
 # Read the dataset
 pd.set_option('mode.use_inf_as_na', True) # convert inf to nan
-company_df = read_companys_dataset2018()
+company_df = read_companys_dataset2018(PATH_TO_CSV)
 
 # Convert Labels to Binary Class
 company_df.drop('Label', axis=1, inplace=True)
