@@ -6,9 +6,9 @@ from fuzzywuzzy import process
 
 def read_base_dataset(version: str="2018") -> pd.DataFrame:
     if version == "2018":
-        base_df = pd.read_csv(base2018path)
+        base_df = pd.read_csv(vars["BaseDataset"]["2018"])
     else:
-        base_df = pd.read_csv(base2017path)
+        base_df = pd.read_csv(vars["BaseDataset"]["2017"])
         # Clear extra whitespace within the columns
         base_df.columns = base_df.columns.map(lambda x : x.strip())
         # Remove unnecessary column
@@ -16,12 +16,9 @@ def read_base_dataset(version: str="2018") -> pd.DataFrame:
     
     return base_df
 
-def read_companys_dataset2017(dataset_path: str="CompanyDataset/example.pcap_Flow.csv") -> pd.DataFrame:
+def read_companys_dataset2017() -> pd.DataFrame:
 
-    # Paths
-    basedataset_path = "CIC_IDS2017_Dataset/MachineLearningCVE/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
-
-    base_df = pd.read_csv(basedataset_path)
+    base_df = pd.read_csv(vars["BaseDataset"]["2017"])
 
     # Clear extra whitespace within the columns
     base_df.columns = base_df.columns.map(lambda x : x.strip())
@@ -30,7 +27,7 @@ def read_companys_dataset2017(dataset_path: str="CompanyDataset/example.pcap_Flo
     base_df.drop('Fwd Header Length.1', axis=1, inplace=True)
 
     # ### Company's dataset
-    company_df = pd.read_csv(dataset_path)
+    company_df = pd.read_csv(vars["CompanyDataset"]["fullsize"])
 
     # Before processing columns
     print("Number of Base Dataset Columns:", len(base_df.columns))
@@ -74,11 +71,10 @@ def read_companys_dataset2017(dataset_path: str="CompanyDataset/example.pcap_Flo
 
     return company_df
 
-def read_companys_dataset2018(company_dataset_path: str="CompanyDataset/example.pcap_Flow.csv") -> pd.DataFrame:
-    basedataset_path = "/home/haktrak/Public/DDosHOIC.csv"
+def read_companys_dataset2018() -> pd.DataFrame:
 
-    base_df = pd.read_csv(basedataset_path)
-    company_df = pd.read_csv(company_dataset_path)
+    base_df = pd.read_csv(vars["BaseDataset"]["2018"])
+    company_df = pd.read_csv(vars["CompanyDataset"]["fullsize"])
 
     # Make Comparison
 
@@ -144,6 +140,3 @@ def get_configs(config_file: str="config.yml") -> dict:
         return None
 
 vars = get_configs()
-company_dataset_path = vars["CompanyDataset"]["fullsize"]
-base2017path = vars["BaseDataset"]["2017"]
-base2018path = vars["BaseDataset"]["2018"]
