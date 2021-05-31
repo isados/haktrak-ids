@@ -4,7 +4,7 @@ import pandas as pd
 import joblib
 from utilities import read_companys_dataset2018
 
-MODEL_PATH = "knnmodel.pickle"
+MODEL_PATH = "knnmodel.pkl"
 
 # Read the dataset
 pd.set_option('mode.use_inf_as_na', True) # convert inf to nan
