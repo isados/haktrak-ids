@@ -130,3 +130,5 @@ dmypy.json
 
 # Project Specific
 CompanyDataset/haktrak.csv
+/csv
+/*.pcap

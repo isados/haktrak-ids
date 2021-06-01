@@ -1,5 +1,7 @@
 import yaml
 import os
+from os import path
+import subprocess
 import pandas as pd
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
@@ -147,5 +149,20 @@ def get_configs(config_file: str="config.yml") -> dict:
     except yaml.YAMLError as ymlexcp:
         print(ymlexcp)
         return None
+
+def convert_pcap_to_csv(pcap_path):
+    script_path = "TCPDUMP_and_CICFlowMeter/convert_pcap_csv.sh"
+
+    csv_folder = path.abspath("csv")
+    if not path.exists(csv_folder):
+        os.makedirs(csv_folder)
+
+    return_code = subprocess.run([script_path, pcap_path, csv_folder])
+    print(return_code)
+
+    csv_name = pcap_path[:-5] + "_ISCX.csv"
+    print(csv_name)
+    return path.join(csv_folder, csv_name)
+
 
 vars = get_configs()
