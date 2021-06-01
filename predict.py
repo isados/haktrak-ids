@@ -38,4 +38,7 @@ print("Start the detection...")
 predictions = pipeline.predict(company_df)
 company_df['Label'] = predictions
 company_df.replace({"Label": {0: 'Benign', 1: 'Anomalous'}}, inplace=True)
+
+# Save 
+company_df.to_csv(CSV_PATH, index=False)
 print("\nRESULTS:", company_df.Label.value_counts().to_dict())
