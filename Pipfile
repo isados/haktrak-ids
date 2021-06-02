@@ -9,6 +9,7 @@ pandas = "*"
 pyaml = "*"
 fuzzywuzzy = "*"
 python-levenshtein = "*"
+joblib = "*"
 
 [dev-packages]
 

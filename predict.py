@@ -1,7 +1,7 @@
 
 # ## Setup and Imports
 import sys
-import joblib
+import pickle
 import pandas as pd
 from utilities import read_companys_dataset2018, convert_pcap_to_csv
 
@@ -31,7 +31,9 @@ company_df.drop(repeated_headers, axis=0, inplace=True)
 print("Number of samples:", company_df.shape[0])
 
 # Read Pipeline from file
-pipeline = joblib.load(MODEL_PATH)
+with open(MODEL_PATH, "rb") as file:
+    pipeline = pickle.load(file)
+
 # print(f"Model being used: {pipeline}")
 print("Start the detection...")
 
