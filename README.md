@@ -1,16 +1,30 @@
 # HakTrak IDS
 This is HakTrak's Intrusion Detection System against a myriad of attacks.
 
-## Clone Repo
-`git clone --recurse-submodules git@github.com:isados/haktrak-ids.git`
+---
+## Install Dependencies
 
-## Install
-`pip install -r requirements.txt`
+[Git-LFS](https://git-lfs.github.com/) :- For managing large files; which in this case includes pickeled models. Just follow the steps at the link provided.
 
-## Generate PCAP File
-`sudo tcpdump -i {interface number} -w name.pcap`
+Pipenv :- run this command `pip install --user pipenv` to install it.
+
+## Clone this repo
+```
+~> git clone --recurse-submodules git@github.com:isados/haktrak-ids.git
+```
+
+## Installation
+```
+~> cd haktrak-ids
+~> pipenv sync
+```
+
+## Generate PCAP file [OPTIONAL]
+```
+~> sudo tcpdump -i {interface number} -w {path_to_pcap}
+```
 
 ## Predict on PCAP
-`python3 predict.py name.pcap`
-
-
+```
+~> pipenv run python3 predict.py {path_to_pcap}
+```
