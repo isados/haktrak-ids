@@ -156,13 +156,13 @@ def convert_pcap_to_csv(pcap_path):
     csv_folder = path.abspath("csv")
     if not path.exists(csv_folder):
         os.makedirs(csv_folder)
+    csv_name = os.path.basename(os.path.splitext(pcap_path)[0])
 
     return_code = subprocess.run([script_path, pcap_path, csv_folder])
     print(return_code)
 
-    csv_name = pcap_path[:-5] + "_ISCX.csv"
-    print(csv_name)
-    return path.join(csv_folder, csv_name)
+    csv_path = path.join(csv_folder, csv_name + "_ISCX.csv")
+    return csv_path
 
 
 vars = get_configs()
