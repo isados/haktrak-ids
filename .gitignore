@@ -129,6 +129,6 @@ dmypy.json
 .pyre/
 
 # Project Specific
-CompanyDataset/haktrak.csv
 /csv
 /*.pcap
+/logs
