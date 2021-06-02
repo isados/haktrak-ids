@@ -1,7 +1,7 @@
 # HakTrak IDS
 This is HakTrak's Intrusion Detection System against a myriad of attacks.
 
-# Clone Repo
+## Clone Repo
 `git clone --recurse-submodules git@github.com:isados/haktrak-ids.git`
 
 ## Install
