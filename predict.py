@@ -3,7 +3,7 @@
 import sys
 import pickle
 import pandas as pd
-from utilities import read_companys_dataset2018, convert_pcap_to_csv
+from utils import read_companys_dataset2018, convert_pcap_to_csv
 
 PCAP_PATH = sys.argv[1]
 if PCAP_PATH is None:

@@ -2,7 +2,7 @@ import os
 import sys
 import glob
 import pandas as pd
-from utilities import get_configs
+from utils import get_configs
 
 configvars = get_configs()
 root = configvars['CompanyDataset']['rootpath']
