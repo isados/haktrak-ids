@@ -1,5 +1,5 @@
+#!/usr/bin/env python3
 
-# ## Setup and Imports
 import sys
 import pickle
 
