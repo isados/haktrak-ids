@@ -9,3 +9,5 @@ BaseDataset:
   "2018": "/home/haktrak/Public/DDosHOIC.csv"
 
 pcap_name: "pcap/test.pcap"
+
+knnmodel_path: knnmodel.pkl

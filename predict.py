@@ -2,15 +2,18 @@
 # ## Setup and Imports
 import sys
 import pickle
+
 import pandas as pd
-from utils import read_companys_dataset2018, convert_pcap_to_csv
+
+from utils import read_companys_dataset2018, convert_pcap_to_csv, get_configs
 
 PCAP_PATH = sys.argv[1]
 if PCAP_PATH is None:
     raise FileNotFoundError
 CSV_PATH = convert_pcap_to_csv(PCAP_PATH)
 
-MODEL_PATH = "knnmodel.pkl"
+configvars = get_configs()
+MODEL_PATH = configvars['knnmodel_path']
 
 # Read the dataset
 pd.set_option('mode.use_inf_as_na', True) # convert inf to nan
