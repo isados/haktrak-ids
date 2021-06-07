@@ -16,15 +16,20 @@ Pipenv :- run this command `pip install --user pipenv` to install it.
 ## Installation
 ```
 ~> cd haktrak-ids
+~> cp example-config.yml config.yml
+```
+Make necessary changes to the config file and save it.
+```
 ~> pipenv sync
 ```
 
 ## Generate PCAP file [OPTIONAL]
+Here the PCAP name could be anything you desire.
 ```
-~> sudo tcpdump -i {interface number} -w {path_to_pcap}
+~> sudo tcpdump -i {interface number} -w test.pcap
 ```
 
 ## Predict on PCAP
 ```
-~> pipenv run python3 predict.py {path_to_pcap}
+~> pipenv run ./predict.py test.pcap
 ```
