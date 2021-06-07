@@ -2,7 +2,11 @@ import yaml
 import os
 from os import path
 import subprocess
+
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix, classification_report
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
@@ -199,5 +203,22 @@ def convert_pcap_to_csv(pcap_path):
 
     csv_path = path.join(csv_folder, csv_name + "_ISCX.csv")
     return csv_path
+
+# EDA Functions
+def get_scores_plots_stats(actual: pd.DataFrame, pred: pd.DataFrame, *, multiclass_avg='weighted', class_labels=[0,1], figsize=(10,10)) -> None:
+    print(classification_report(actual, pred, target_names=class_labels))
+    f, ax = plt.subplots(1, 1, figsize=figsize)
+    heatmap_ax = ax
+    cm = confusion_matrix(actual, pred)
+
+    # class_labels = ['Benign', 'Anomalous']
+    plot_labels = {"xticklabels": class_labels, 
+               "yticklabels": class_labels}
+
+    sns.heatmap(cm,annot=True, linewidth =0.5, linecolor ="red", fmt =".0f", ax=heatmap_ax, **plot_labels)
+    heatmap_ax.set_xlabel("Predicted Labels")
+    heatmap_ax.set_ylabel("Actual Labels")
+    plt.show()
+
 
 vars = get_configs()
