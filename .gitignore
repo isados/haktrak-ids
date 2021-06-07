@@ -133,3 +133,4 @@ dmypy.json
 /*.pcap
 /logs
 /.vscode
+/config.yml
