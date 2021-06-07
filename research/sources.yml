@@ -1,2 +1,4 @@
-malicious-url-datasets:
+malicious-url-notebooks:
   xwolf12-processed: https://www.kaggle.com/xwolf12/malicious-and-benign-websites
+  siddharthkumar25-processed: https://www.kaggle.com/siddharthkumar25/detect-malicious-url-using-ml
+  bhattsameer-tokenizeronly: https://github.com/bhattsameer/Malicious-URL-Detection-using-Machine-Learning/blob/master/notebooks/maliciousurl.ipynb
