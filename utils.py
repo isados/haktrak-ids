@@ -1,5 +1,6 @@
 import yaml
 import os
+import sys
 from os import path
 import subprocess
 
@@ -198,8 +199,11 @@ def convert_pcap_to_csv(pcap_path):
         os.makedirs(csv_folder)
     csv_name = os.path.basename(os.path.splitext(pcap_path)[0])
 
-    return_code = subprocess.run([script_path, pcap_path, csv_folder])
-    print(return_code)
+    process_obj = subprocess.run([script_path, pcap_path, csv_folder])
+    return_code = process_obj.returncode
+    print(f"Return Code for `{script_path}` : {return_code}")
+    if return_code > 0:
+        sys.exit(return_code)
 
     csv_path = path.join(csv_folder, csv_name + "_ISCX.csv")
     return csv_path
