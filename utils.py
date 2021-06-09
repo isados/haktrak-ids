@@ -13,16 +13,11 @@ from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
 
-def read_base_dataset(version: str="2018") -> pd.DataFrame:
-    if version == "2018":
-        base_df = pd.read_csv(vars["BaseDataset"]["2018"])
-    else:
-        base_df = pd.read_csv(vars["BaseDataset"]["2017"])
-        # Clear extra whitespace within the columns
+def read_base_dataset(nickname: str="hoic") -> pd.DataFrame:
+    base_df = pd.read_csv(vars["BaseDataset"][nickname])
+    if nickname == "2017": # Remove whitespace and unnecesary column
         base_df.columns = base_df.columns.map(lambda x : x.strip())
-        # Remove unnecessary column
         base_df.drop('Fwd Header Length.1', axis=1, inplace=True)
-    
     return base_df
 
 def check_for_valid_dataset(path):
@@ -218,6 +213,12 @@ def load_model(model_name):
         return pipeline
     else:
         return None
+
+def save_model(model, name):
+    savepath = path.join("models", name)
+    with open(savepath, "wb") as file:
+        pickle.dump(model, file)
+    print("Saved model at :", savepath)
 
 # EDA Functions
 def get_scores_plots_stats(actual: pd.DataFrame, pred: pd.DataFrame, *, multiclass_avg='weighted', class_labels=[0,1], figsize=(10,10)) -> None:
