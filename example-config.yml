@@ -1,18 +1,22 @@
 ---
+# USER GUIDE
+  # All variables are mostly fixed, unless they have the comment '#changethis' trailing it
+
 CompanyDataset: 
   rootpath: CompanyDataset
-  fullsize: CompanyDataset/haktrak.csv
   sample: CompanyDataset/example.pcap_Flow.csv
+  fullsize: CompanyDataset/haktrak.csv #changethis
 
 BaseDataset:
-  "2017": "CIC_IDS2017_Dataset/MachineLearningCVE/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
-  "2018": "/home/haktrak/Public/DDosHOIC.csv"
+  "2017": "CIC_IDS2017_Dataset/MachineLearningCVE/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv" #changethis
+  "2018": "/home/haktrak/Public/DDosHOIC.csv" #changethis
   "malicious-urls":
-    "og": "/home/haktrak/Public/ISCXURL2016/FinalDataset/original_malicious_urls.csv"
+    "og": "/home/haktrak/Public/ISCXURL2016/FinalDataset/original_malicious_urls.csv" #changethis
 
-pcap_name: "pcap/test.pcap"
+sample_pcap_path: TEST.pcap
 
-# Model/Pipeline Paths
-knnmodel_path: models/knnmodel.pkl
-ridge-regression: models/countvectorizer-ridgeregression-pipeline.pkl
-
+# *Model/Pipeline Paths*
+#   Set paths using the following convention
+#   {DATASETNAME_MODELTYPE_path}: models/{model_name}
+hoic_knnmodel_path: models/knnmodel.pkl
+iscxurls_ridgeclassifier_path: models/countvectorizer-ridgeregression-pipeline.pkl
