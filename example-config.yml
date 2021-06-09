@@ -12,5 +12,7 @@ BaseDataset:
 
 pcap_name: "pcap/test.pcap"
 
-# Model Paths
-knnmodel_path: knnmodel.pkl
+# Model/Pipeline Paths
+knnmodel_path: models/knnmodel.pkl
+ridge-regression: models/countvectorizer-ridgeregression-pipeline.pkl
+
