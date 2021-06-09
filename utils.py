@@ -4,6 +4,7 @@ import sys
 from os import path
 import subprocess
 
+import pickle
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -207,6 +208,16 @@ def convert_pcap_to_csv(pcap_path):
 
     csv_path = path.join(csv_folder, csv_name + "_ISCX.csv")
     return csv_path
+
+# Loading/Dumping models
+def load_model(model_name):
+    model_path = vars.get(model_name)
+    if model_path:
+        with open(model_path, "rb") as file:
+            pipeline = pickle.load(file)
+        return pipeline
+    else:
+        return None
 
 # EDA Functions
 def get_scores_plots_stats(actual: pd.DataFrame, pred: pd.DataFrame, *, multiclass_avg='weighted', class_labels=[0,1], figsize=(10,10)) -> None:

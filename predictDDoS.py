@@ -5,7 +5,7 @@ import pickle
 
 import pandas as pd
 
-from utils import read_companys_dataset2018, convert_pcap_to_csv, get_configs
+from utils import load_model, read_companys_dataset2018, convert_pcap_to_csv, get_configs
 
 PCAP_PATH = sys.argv[1]
 if PCAP_PATH is None:
@@ -13,7 +13,6 @@ if PCAP_PATH is None:
 CSV_PATH = convert_pcap_to_csv(PCAP_PATH)
 
 configvars = get_configs()
-MODEL_PATH = configvars['hoic_knnmodel_path']
 
 # Read the dataset
 pd.set_option('mode.use_inf_as_na', True) # convert inf to nan
@@ -34,8 +33,7 @@ company_df.drop(repeated_headers, axis=0, inplace=True)
 print("Number of samples:", company_df.shape[0])
 
 # Read Pipeline from file
-with open(MODEL_PATH, "rb") as file:
-    pipeline = pickle.load(file)
+pipeline = load_model('hoic_knnmodel')
 
 # print(f"Model being used: {pipeline}")
 print("Start the detection...")
