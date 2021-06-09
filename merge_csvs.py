@@ -25,8 +25,11 @@ configvars = get_configs()
 
 location = args.csv
 csv_files = glob.glob(f"{location}/{args.prefix}*")
-df_from_each_file = [pd.read_csv(f, sep=',', header=None) for f in csv_files]
-raw_values = [df.values for df in df_from_each_file]
+raw_values = []
+for index, csv in enumerate(csv_files):
+    print(f"[{index}] Processing {csv}")
+    df = pd.read_csv(csv, sep=',', header=None)
+    raw_values.append(df.values)
 
 try:
     raw_array = np.concatenate(raw_values, axis=0)
