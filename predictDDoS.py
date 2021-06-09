@@ -13,7 +13,7 @@ if PCAP_PATH is None:
 CSV_PATH = convert_pcap_to_csv(PCAP_PATH)
 
 configvars = get_configs()
-MODEL_PATH = configvars['knnmodel_path']
+MODEL_PATH = configvars['hoic_knnmodel_path']
 
 # Read the dataset
 pd.set_option('mode.use_inf_as_na', True) # convert inf to nan
