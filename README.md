@@ -29,7 +29,7 @@ Here the PCAP name could be anything you desire.
 ~> sudo tcpdump -i {interface number} -w test.pcap
 ```
 
-## Predict on PCAP
+## Predict on PCAP on DDoS Attacks (more coming soon...)
 ```
-~> pipenv run ./predict.py test.pcap
+~> pipenv run ./predictDDoS.py test.pcap
 ```
