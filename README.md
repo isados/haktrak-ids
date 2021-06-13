@@ -33,3 +33,7 @@ Here the PCAP name could be anything you desire.
 ```
 ~> pipenv run ./predict.py test.pcap
 ```
+
+# Reference
+
+[CIC-IDS 2018]("https://www.unb.ca/cic/datasets/ids-2018.html") : For description of the dataset and its fields.
