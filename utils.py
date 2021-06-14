@@ -14,7 +14,8 @@ from fuzzywuzzy import process
 
 
 def read_base_dataset(nickname: str="hoic") -> pd.DataFrame:
-    base_df = pd.read_csv(vars["BaseDataset"][nickname])
+    path = vars["BaseDataset"].get(nickname, nickname) # if nickname doesn't exist, interpret nickname as path
+    base_df = pd.read_csv(path)
     if nickname == "2017": # Remove whitespace and unnecesary column
         base_df.columns = base_df.columns.map(lambda x : x.strip())
         base_df.drop('Fwd Header Length.1', axis=1, inplace=True)
