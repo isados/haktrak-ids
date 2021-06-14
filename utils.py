@@ -3,6 +3,7 @@ import os
 import sys
 from os import path
 import subprocess
+from socket import getservbyport
 
 import pickle
 import pandas as pd
@@ -100,9 +101,11 @@ def read_companys_dataset2017(path) -> pd.DataFrame:
 
     return company_df
 
-def read_companys_dataset2018(path, *, extra_cols: bool=False) -> pd.DataFrame:
+def read_companys_dataset2018(path: str = "", *, extra_cols: bool=False, filtered: bool=False) -> pd.DataFrame:
     path = check_for_valid_dataset(path)
     company_df = pd.read_csv(path)
+    if filtered == True:
+        return company_df
     
     # Make Comparison
     base2018cols = ['Dst Port', 'Protocol', 'Timestamp', 'Flow Duration', 'Tot Fwd Pkts',
@@ -238,5 +241,7 @@ def get_scores_plots_stats(actual: pd.DataFrame, pred: pd.DataFrame, *, multicla
     heatmap_ax.set_ylabel("Actual Labels")
     plt.show()
 
+def whatportisthis(port: str) -> str:
+    return getservbyport(int(port))
 
 vars = get_configs()
