@@ -100,7 +100,7 @@ def read_companys_dataset2017(path) -> pd.DataFrame:
 
     return company_df
 
-def read_companys_dataset2018(path) -> pd.DataFrame:
+def read_companys_dataset2018(path, *, extra_cols: bool=False) -> pd.DataFrame:
     path = check_for_valid_dataset(path)
     company_df = pd.read_csv(path)
     
@@ -172,8 +172,9 @@ def read_companys_dataset2018(path) -> pd.DataFrame:
     corrected_labels_map.update(change)
 
     # Drop columns
-    extra_cols = companyset - corrected_labels_map.keys() - baseset
-    company_df.drop(extra_cols, axis=1, inplace=True)
+    if extra_cols == False:
+        extra_cols = companyset - corrected_labels_map.keys() - baseset
+        company_df.drop(extra_cols, axis=1, inplace=True)
 
     # Finally replace columns
     company_df.columns = company_df.columns.map(lambda bad_col: corrected_labels_map.get(bad_col, bad_col))
