@@ -1,18 +1,22 @@
 ---
+# USER GUIDE
+  # All variables are mostly fixed, unless they have the comment '#changethis' trailing it
+
 CompanyDataset: 
   rootpath: CompanyDataset
-  fullsize: CompanyDataset/haktrak.csv
   sample: CompanyDataset/example.pcap_Flow.csv
+  fullsize: CompanyDataset/haktrak.csv #changethis
 
 BaseDataset:
-  "2017": "CIC_IDS2017_Dataset/MachineLearningCVE/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
-  "2018": "/home/haktrak/Public/DDosHOIC.csv"
-  "malicious-urls":
-    "og": "/home/haktrak/Public/ISCXURL2016/FinalDataset/original_malicious_urls.csv"
+  "ddos2017": "CIC_IDS2017_Dataset/MachineLearningCVE/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv" #changethis
+  "hoic": "/home/haktrak/Public/DDosHOIC.csv" #changethis
+  "loic": "/home/haktrak/Public/DDosLOIC.csv" #changethis
+  "malicious-urls": "/home/haktrak/Public/ISCXURL2016/FinalDataset/original_malicious_urls.csv" #changethis
 
-pcap_name: "pcap/test.pcap"
+sample_pcap_path: TEST.pcap
 
-# Model/Pipeline Paths
-knnmodel_path: models/knnmodel.pkl
-ridge-regression: models/countvectorizer-ridgeregression-pipeline.pkl
-
+# *Model/Pipeline Paths*
+#   Set paths using the following convention
+#   {DATASETNAME_MODELTYPE}: models/{model_name}
+hoic_knnmodel: models/knnmodel.pkl
+iscxurls_ridgeclassifier: models/countvectorizer-ridgeregression-pipeline.pkl

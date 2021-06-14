@@ -1,8 +1,10 @@
 import yaml
 import os
+import sys
 from os import path
 import subprocess
 
+import pickle
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -11,16 +13,12 @@ from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
 
-def read_base_dataset(version: str="2018") -> pd.DataFrame:
-    if version == "2018":
-        base_df = pd.read_csv(vars["BaseDataset"]["2018"])
-    else:
-        base_df = pd.read_csv(vars["BaseDataset"]["2017"])
-        # Clear extra whitespace within the columns
+def read_base_dataset(nickname: str="hoic") -> pd.DataFrame:
+    path = vars["BaseDataset"].get(nickname, nickname) # if nickname doesn't exist, interpret nickname as path
+    base_df = pd.read_csv(path)
+    if nickname == "2017": # Remove whitespace and unnecesary column
         base_df.columns = base_df.columns.map(lambda x : x.strip())
-        # Remove unnecessary column
         base_df.drop('Fwd Header Length.1', axis=1, inplace=True)
-    
     return base_df
 
 def check_for_valid_dataset(path):
@@ -102,7 +100,7 @@ def read_companys_dataset2017(path) -> pd.DataFrame:
 
     return company_df
 
-def read_companys_dataset2018(path) -> pd.DataFrame:
+def read_companys_dataset2018(path, *, extra_cols: bool=False) -> pd.DataFrame:
     path = check_for_valid_dataset(path)
     company_df = pd.read_csv(path)
     
@@ -174,8 +172,9 @@ def read_companys_dataset2018(path) -> pd.DataFrame:
     corrected_labels_map.update(change)
 
     # Drop columns
-    extra_cols = companyset - corrected_labels_map.keys() - baseset
-    company_df.drop(extra_cols, axis=1, inplace=True)
+    if extra_cols == False:
+        extra_cols = companyset - corrected_labels_map.keys() - baseset
+        company_df.drop(extra_cols, axis=1, inplace=True)
 
     # Finally replace columns
     company_df.columns = company_df.columns.map(lambda bad_col: corrected_labels_map.get(bad_col, bad_col))
@@ -198,11 +197,30 @@ def convert_pcap_to_csv(pcap_path):
         os.makedirs(csv_folder)
     csv_name = os.path.basename(os.path.splitext(pcap_path)[0])
 
-    return_code = subprocess.run([script_path, pcap_path, csv_folder])
-    print(return_code)
+    process_obj = subprocess.run([script_path, pcap_path, csv_folder])
+    return_code = process_obj.returncode
+    print(f"Return Code for `{script_path}` : {return_code}")
+    if return_code > 0:
+        sys.exit(return_code)
 
     csv_path = path.join(csv_folder, csv_name + "_ISCX.csv")
     return csv_path
+
+# Loading/Dumping models
+def load_model(model_name):
+    model_path = vars.get(model_name)
+    if model_path:
+        with open(model_path, "rb") as file:
+            pipeline = pickle.load(file)
+        return pipeline
+    else:
+        return None
+
+def save_model(model, name):
+    savepath = path.join("models", name)
+    with open(savepath, "wb") as file:
+        pickle.dump(model, file)
+    print("Saved model at :", savepath)
 
 # EDA Functions
 def get_scores_plots_stats(actual: pd.DataFrame, pred: pd.DataFrame, *, multiclass_avg='weighted', class_labels=[0,1], figsize=(10,10)) -> None:

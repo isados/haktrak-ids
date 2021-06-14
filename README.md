@@ -29,11 +29,10 @@ Here the PCAP name could be anything you desire.
 ~> sudo tcpdump -i {interface number} -w test.pcap
 ```
 
-## Predict on PCAP
+## Predict on PCAP on DDoS Attacks (more coming soon...)
 ```
-~> pipenv run ./predict.py test.pcap
+~> pipenv run ./predictDDoS.py test.pcap
 ```
 
 # Reference
-
 [CIC-IDS 2018]("https://www.unb.ca/cic/datasets/ids-2018.html") : For description of the dataset and its fields.
