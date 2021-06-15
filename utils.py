@@ -189,21 +189,19 @@ def read_companys_dataset2018(path: str = "", *, numdataseparate: bool=False, fi
     company_df.drop(repeated_headers, axis=0, inplace=True)
 
     # Final Preprocessing step
-    # timestamp_series = pd.to_datetime(company_df['Timestamp'], dayfirst=True)
+    timestamp_series = pd.to_datetime(company_df['Timestamp'], dayfirst=True)
 
-    # # Extract records with valid idle times only.
-    # idle_time_cols = ['Idle Mean', 'Idle Max', 'Idle Min']
-    # company_df[idle_time_cols] = company_df[idle_time_cols].astype(np.float64)
-    # condition = (company_df['Idle Mean'] > 922547296306670) & (company_df['Idle Max'] > 922547296306670) & (company_df['Idle Min'] > 922547296306670)
-    # company_df = company_df[condition]
+    # Extract records with valid idle times only.
+    idle_time_cols = ['Idle Mean', 'Idle Max', 'Idle Min']
+    company_df[idle_time_cols] = company_df[idle_time_cols].astype(np.float64)
+    condition = (company_df['Idle Mean'] > 922547296306670) & (company_df['Idle Max'] > 922547296306670) & (company_df['Idle Min'] > 922547296306670)
+    company_df = company_df[condition]
 
-    # # Convert to datetime format from Posix
-    # company_df[idle_time_cols] = company_df[idle_time_cols].applymap(lambda ts : datetime.datetime.fromtimestamp(ts/1000000))
-    # # Subtract the original timestamp from them
-    # company_df[idle_time_cols] = company_df[idle_time_cols].sub(timestamp_series, axis='index').applymap(lambda x: int(x.total_seconds()))
-
-    # Get port names instead of numbers
-    # company_df['Protocol'] = company_df['Protocol'].map(lambda port: whatportisthis(port, "tcp"))
+    # Convert to datetime format from Posix
+    company_df[idle_time_cols] = company_df[idle_time_cols].applymap(lambda ts : datetime.datetime.fromtimestamp(ts/1000000))
+    # Subtract the original timestamp from them
+    company_df[idle_time_cols] = company_df[idle_time_cols].sub(timestamp_series, axis='index').applymap(lambda x: x.total_seconds())
+    company_df[idle_time_cols] = company_df[idle_time_cols].fillna(0).astype(np.int64)
 
     if numdataseparate == True:
         extra_cols = ['Timestamp'] + list(companyset - corrected_labels_map.keys() - baseset)
