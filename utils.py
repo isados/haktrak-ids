@@ -6,8 +6,10 @@ import subprocess
 from socket import getservbyport
 
 import pickle
+import numpy as np
 import pandas as pd
 import seaborn as sns
+import datetime
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, classification_report
 from fuzzywuzzy import fuzz
@@ -25,7 +27,7 @@ def read_base_dataset(nickname: str="hoic") -> pd.DataFrame:
 def check_for_valid_dataset(path):
     if os.path.exists(path):
         return path
-    print("Invalid file path to dataset, switching to company's dataset to predict on...")
+    print("Invalid file path to dataset, switching to company's default dataset to predict on...")
     return get_configs()['CompanyDataset']['fullsize']
         
 def read_companys_dataset2017(path) -> pd.DataFrame:
@@ -101,7 +103,7 @@ def read_companys_dataset2017(path) -> pd.DataFrame:
 
     return company_df
 
-def read_companys_dataset2018(path: str = "", *, extra_cols: bool=False, filtered: bool=False) -> pd.DataFrame:
+def read_companys_dataset2018(path: str = "", *, numdataseparate: bool=True, filtered: bool=False):
     path = check_for_valid_dataset(path)
     company_df = pd.read_csv(path)
     if filtered == True:
@@ -174,15 +176,42 @@ def read_companys_dataset2018(path: str = "", *, extra_cols: bool=False, filtere
 
     corrected_labels_map.update(change)
 
-    # Drop columns
-    if extra_cols == False:
-        extra_cols = companyset - corrected_labels_map.keys() - baseset
-        company_df.drop(extra_cols, axis=1, inplace=True)
-
     # Finally replace columns
     company_df.columns = company_df.columns.map(lambda bad_col: corrected_labels_map.get(bad_col, bad_col))
 
-    return company_df
+    # Order it
+    company_df.sort_values("Timestamp", inplace=True)
+
+    print("Removing null & repeated records...\n")
+    company_df.dropna(axis=0, inplace=True)
+
+    repeated_headers = company_df[(company_df.Protocol == 'Protocol')].index
+    company_df.drop(repeated_headers, axis=0, inplace=True)
+
+    # Final Preprocessing step
+    # timestamp_series = pd.to_datetime(company_df['Timestamp'], dayfirst=True)
+
+    # # Extract records with valid idle times only.
+    # idle_time_cols = ['Idle Mean', 'Idle Max', 'Idle Min']
+    # company_df[idle_time_cols] = company_df[idle_time_cols].astype(np.float64)
+    # condition = (company_df['Idle Mean'] > 922547296306670) & (company_df['Idle Max'] > 922547296306670) & (company_df['Idle Min'] > 922547296306670)
+    # company_df = company_df[condition]
+
+    # # Convert to datetime format from Posix
+    # company_df[idle_time_cols] = company_df[idle_time_cols].applymap(lambda ts : datetime.datetime.fromtimestamp(ts/1000000))
+    # # Subtract the original timestamp from them
+    # company_df[idle_time_cols] = company_df[idle_time_cols].sub(timestamp_series, axis='index').applymap(lambda x: int(x.total_seconds()))
+
+    # Get port names instead of numbers
+    # company_df['Protocol'] = company_df['Protocol'].map(lambda port: whatportisthis(port, "tcp"))
+
+    if numdataseparate == True:
+        extra_cols = ['Timestamp'] + list(companyset - corrected_labels_map.keys() - baseset)
+        categorical_data = company_df[extra_cols]
+        company_df.drop(extra_cols, axis=1, inplace=True)
+        return company_df, categorical_data
+    else:
+        return company_df, None
 
 def get_configs(config_file: str="config.yml") -> dict:
     try:
@@ -241,6 +270,7 @@ def get_scores_plots_stats(actual: pd.DataFrame, pred: pd.DataFrame, *, multicla
     heatmap_ax.set_ylabel("Actual Labels")
     plt.show()
 
+# Filtering functions
 def whatportisthis(port: str, service_type: str='tcp') -> str:
     try:
        return getservbyport(int(port), service_type)
