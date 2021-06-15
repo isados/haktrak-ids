@@ -17,7 +17,7 @@ configvars = get_configs()
 # Read the dataset
 pd.set_option('mode.use_inf_as_na', True) # convert inf to nan
 numerical_data, categorical_data = read_companys_dataset2018(
-    CSV_PATH, numdataseparate=True)
+    CSV_PATH, filter=True, numdataseparate=True)
 
 # Convert Labels to Binary Class
 numerical_data.drop('Label', axis=1, inplace=True)

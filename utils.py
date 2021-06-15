@@ -103,10 +103,10 @@ def read_companys_dataset2017(path) -> pd.DataFrame:
 
     return company_df
 
-def read_companys_dataset2018(path: str = "", *, numdataseparate: bool=True, filtered: bool=False):
+def read_companys_dataset2018(path: str = "", *, numdataseparate: bool=False, filter: bool=False):
     path = check_for_valid_dataset(path)
     company_df = pd.read_csv(path)
-    if filtered == True:
+    if filter == False:
         return company_df
     
     # Make Comparison
@@ -211,7 +211,7 @@ def read_companys_dataset2018(path: str = "", *, numdataseparate: bool=True, fil
         company_df.drop(extra_cols, axis=1, inplace=True)
         return company_df, categorical_data
     else:
-        return company_df, None
+        return company_df
 
 def get_configs(config_file: str="config.yml") -> dict:
     try:
