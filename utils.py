@@ -241,7 +241,11 @@ def get_scores_plots_stats(actual: pd.DataFrame, pred: pd.DataFrame, *, multicla
     heatmap_ax.set_ylabel("Actual Labels")
     plt.show()
 
-def whatportisthis(port: str) -> str:
-    return getservbyport(int(port))
+def whatportisthis(port: str, service_type: str='tcp') -> str:
+    try:
+       return getservbyport(int(port), service_type)
+    except:
+        return "UNA/RES"
+    return None
 
 vars = get_configs()
