@@ -31,7 +31,7 @@ print("Start the detection...")
 
 predictions = pipeline.predict(numerical_data)
 numerical_data['Label'] = predictions
-numerical_data['Protocol'] = numerical_data['Protocol'].map(lambda port: whatportisthis(port, "tcp"))
+numerical_data['ProtocolName'] = numerical_data['Protocol'].map(lambda port: whatportisthis(port, "tcp"))
 numerical_data.replace({"Label": {0: 'Normal', 1: 'Anomalous'}}, inplace=True)
 
 # Save 
