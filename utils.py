@@ -163,7 +163,6 @@ def read_companys_dataset2018(path: str = "", *, numdataseparate: bool=False, fi
         # Order it
         company_df.sort_values("Timestamp", inplace=True)
 
-        print("Removing null & repeated records...\n")
         company_df.dropna(axis=0, inplace=True)
 
         repeated_headers = company_df[(company_df.Protocol == 'Protocol')].index
@@ -176,6 +175,94 @@ def read_companys_dataset2018(path: str = "", *, numdataseparate: bool=False, fi
         idle_time_cols = ['Idle Mean', 'Idle Max', 'Idle Min']
         company_df[idle_time_cols] = company_df[idle_time_cols].astype(np.float64)
         condition = (company_df['Idle Mean'] > 922547296306670) & (company_df['Idle Max'] > 922547296306670) & (company_df['Idle Min'] > 922547296306670)
+        company_df = company_df[condition]
+
+        # Convert to datetime format from Posix
+        company_df[idle_time_cols] = company_df[idle_time_cols].applymap(lambda ts : datetime.datetime.fromtimestamp(ts/1000000))
+        # Subtract the original timestamp from them
+        company_df[idle_time_cols] = company_df[idle_time_cols].sub(timestamp_series, axis='index').applymap(lambda x: x.total_seconds())
+        company_df[idle_time_cols] = company_df[idle_time_cols].fillna(0).astype(np.int64)
+
+    if numdataseparate == True:
+        extra_cols = ['Timestamp', 'Src IP', 'Src Port', 'Dst IP', 'Flow ID'] 
+        categorical_data = company_df[extra_cols]
+        company_df.drop(extra_cols, axis=1, inplace=True)
+        return company_df, categorical_data
+    else:
+        return company_df
+
+def improved(path: str = "", *, numdataseparate: bool=False, filter: bool=False):
+    path = check_for_valid_dataset(path)
+    company_df = pd.read_csv(path)
+    if filter == True:
+        # 2018 mapping
+        company_to_base2018_map = {'ACK Flag Count': 'ACK Flag Cnt',
+        'Average Packet Size': 'Pkt Size Avg',
+        'Bwd Bulk Rate Avg': 'Bwd Blk Rate Avg',
+        'Bwd Bytes/Bulk Avg': 'Bwd Byts/b Avg',
+        'Bwd Header Length': 'Bwd Header Len',
+        'Bwd IAT Total': 'Bwd IAT Tot',
+        'Bwd Init Win Bytes': 'Init Bwd Win Byts',
+        'Bwd Packet Length Max': 'Bwd Pkt Len Max',
+        'Bwd Packet Length Mean': 'Bwd Pkt Len Mean',
+        'Bwd Packet Length Min': 'Bwd Pkt Len Min',
+        'Bwd Packet Length Std': 'Bwd Pkt Len Std',
+        'Bwd Packet/Bulk Avg': 'Bwd Pkts/b Avg',
+        'Bwd Packets/s': 'Bwd Pkts/s',
+        'Bwd Segment Size Avg': 'Bwd Seg Size Avg',
+        'CWR Flag Count': 'CWE Flag Count',
+        'ECE Flag Count': 'ECE Flag Cnt',
+        'FIN Flag Count': 'FIN Flag Cnt',
+        'FWD Init Win Bytes': 'Init Fwd Win Byts',
+        'Flow Bytes/s': 'Flow Byts/s',
+        'Flow Packets/s': 'Flow Pkts/s',
+        'Fwd Bulk Rate Avg': 'Fwd Blk Rate Avg',
+        'Fwd Bytes/Bulk Avg': 'Fwd Byts/b Avg',
+        'Fwd Header Length': 'Fwd Header Len',
+        'Fwd IAT Total': 'Fwd IAT Tot',
+        'Fwd Packet Length Max': 'Fwd Pkt Len Max',
+        'Fwd Packet Length Mean': 'Fwd Pkt Len Mean',
+        'Fwd Packet Length Min': 'Fwd Pkt Len Min',
+        'Fwd Packet Length Std': 'Fwd Pkt Len Std',
+        'Fwd Packet/Bulk Avg': 'Fwd Pkts/b Avg',
+        'Fwd Packets/s': 'Fwd Pkts/s',
+        'Fwd Segment Size Avg': 'Fwd Seg Size Avg',
+        'PSH Flag Count': 'PSH Flag Cnt',
+        'Packet Length Max': 'Pkt Len Max',
+        'Packet Length Mean': 'Pkt Len Mean',
+        'Packet Length Min': 'Pkt Len Min',
+        'Packet Length Std': 'Pkt Len Std',
+        'Packet Length Variance': 'Pkt Len Var',
+        'RST Flag Count': 'RST Flag Cnt',
+        'SYN Flag Count': 'SYN Flag Cnt',
+        'Subflow Bwd Bytes': 'Subflow Bwd Byts',
+        'Subflow Bwd Packets': 'Subflow Bwd Pkts',
+        'Subflow Fwd Bytes': 'Subflow Fwd Byts',
+        'Subflow Fwd Packets': 'Subflow Fwd Pkts',
+        'Total Bwd packets': 'Tot Bwd Pkts',
+        'Total Fwd Packet': 'Tot Fwd Pkts',
+        'Total Length of Bwd Packet': 'TotLen Bwd Pkts',
+        'Total Length of Fwd Packet': 'TotLen Fwd Pkts',
+        'URG Flag Count': 'URG Flag Cnt'}
+        
+        # Finally replace columns
+        company_df.columns = company_df.columns.map(lambda bad_col:company_to_base2018_map.get(bad_col, bad_col))
+
+        # Order it
+        company_df.sort_values("Timestamp", inplace=True)
+
+        company_df.dropna(axis=0, inplace=True)
+
+        repeated_headers = company_df[(company_df.Protocol == 'Protocol')].index
+        company_df.drop(repeated_headers, axis=0, inplace=True)
+
+        # Final Preprocessing step
+        timestamp_series = pd.to_datetime(company_df['Timestamp'], dayfirst=True)
+
+        # Extract records with valid idle times only.
+        idle_time_cols = ['Idle Mean', 'Idle Max', 'Idle Min']
+        company_df[idle_time_cols] = company_df[idle_time_cols].astype(np.float64)
+        condition = (company_df[idle_time_cols]>922547296306670).all(axis=1)
         company_df = company_df[condition]
 
         # Convert to datetime format from Posix
