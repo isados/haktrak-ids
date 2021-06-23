@@ -22,17 +22,27 @@ Make necessary changes to the config file and save it.
 ```
 ~> pipenv sync
 ```
+Note : Always run the above command after pulling the latest commit from this repo
 
 ## Generate PCAP file [OPTIONAL]
-Here the PCAP name could be anything you desire.
+This is a step needed for most prediction scripts (excluding malicious urls for now).
+
+Here the PCAP filename could be anything you desire.
 ```
 ~> sudo tcpdump -i {interface number} -w test.pcap
 ```
 
-## Predict on PCAP on DDoS Attacks (more coming soon...)
+## Prediction Scripts
+For most attacks (using PCAP as input):
 ```
 ~> pipenv run ./predictDDoS.py test.pcap
 ```
+For Malicious URL attacks (using CSV as input)
+```
+~> pipenv run ./predictMaliciousUrls.py test.csv
+```
+###### Ensure that the CSV has a single field called `urls`
 
-# Reference
+---
+## Reference
 [CIC-IDS 2018]("https://www.unb.ca/cic/datasets/ids-2018.html") : For description of the dataset and its fields.

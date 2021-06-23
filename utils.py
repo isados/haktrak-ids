@@ -103,7 +103,6 @@ def read_companys_dataset2017(path) -> pd.DataFrame:
 
     return company_df
 
-def read_companys_dataset2018(path: str = "", *, numdataseparate: bool=False, filter: bool=False):
     path = check_for_valid_dataset(path)
     company_df = pd.read_csv(path)
     if filter == True:
@@ -191,7 +190,7 @@ def read_companys_dataset2018(path: str = "", *, numdataseparate: bool=False, fi
     else:
         return company_df
 
-def improved(path: str = "", *, numdataseparate: bool=False, filter: bool=False):
+def read_companys_dataset2018(path: str = "", *, numdataseparate: bool=False, filter: bool=False):
     path = check_for_valid_dataset(path)
     company_df = pd.read_csv(path)
     if filter == True:
