@@ -12,10 +12,25 @@ import seaborn as sns
 import datetime
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, classification_report
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
 
 
+def get_configs(config_file: str="config.yml") -> dict:
+    try:
+        with open(config_file, 'r', newline='') as f:
+            return yaml.load(f, Loader=yaml.Loader)
+    except yaml.YAMLError as ymlexcp:
+        print(ymlexcp)
+        return None
+
+# Decorator for most functions
+def latest_config(func):
+    def wrapper(*args, **kwargs):
+        global vars
+        vars = get_configs()
+        return func(*args, **kwargs)
+    return wrapper
+
+@latest_config
 def read_base_dataset(nickname: str="hoic") -> pd.DataFrame:
     path = vars["BaseDataset"].get(nickname, nickname) # if nickname doesn't exist, interpret nickname as path
     base_df = pd.read_csv(path)
@@ -24,6 +39,7 @@ def read_base_dataset(nickname: str="hoic") -> pd.DataFrame:
         base_df.drop('Fwd Header Length.1', axis=1, inplace=True)
     return base_df
 
+@latest_config
 def check_for_valid_dataset(path):
     if os.path.exists(path):
         return path
@@ -278,14 +294,6 @@ def read_companys_dataset2018(path: str = "", *, numdataseparate: bool=False, fi
     else:
         return company_df
 
-def get_configs(config_file: str="config.yml") -> dict:
-    try:
-        with open(config_file, 'r', newline='') as f:
-            return yaml.load(f, Loader=yaml.Loader)
-    except yaml.YAMLError as ymlexcp:
-        print(ymlexcp)
-        return None
-
 def convert_pcap_to_csv(pcap_path):
     script_path = "TCPDUMP_and_CICFlowMeter/convert_pcap_csv.sh"
 
@@ -304,6 +312,7 @@ def convert_pcap_to_csv(pcap_path):
     return csv_path
 
 # Loading/Dumping models
+@latest_config
 def load_model(model_name):
     model_path = vars.get(model_name)
     if model_path:
