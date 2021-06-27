@@ -5,13 +5,16 @@
 CompanyDataset: 
   rootpath: CompanyDataset
   sample: CompanyDataset/example.pcap_Flow.csv
-  fullsize: CompanyDataset/haktrak.csv #changethis
+  fullsize: csv/TEST_ISCX.csv #changethis
 
 BaseDataset:
   "ddos2017": "CIC_IDS2017_Dataset/MachineLearningCVE/Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv" #changethis
   "hoic": "/home/haktrak/Public/DDosHOIC.csv" #changethis
   "loic": "/home/haktrak/Public/DDosLOIC.csv" #changethis
+  "cicids-whole": "/home/haktrak/Public/full_dataset.csv" #changethis
   "malicious-urls": "/home/haktrak/Public/ISCXURL2016/FinalDataset/original_malicious_urls.csv" #changethis
+  "shuff1000train": "/home/haktrak/Public/full_datasets/shuffled_1000_train.csv"
+  "shuff1000test": "/home/haktrak/Public/full_datasets/shuffled_1000_test.csv"
 
 sample_pcap_path: TEST.pcap
 
