@@ -26,14 +26,24 @@ configvars = get_configs()
 location = args.csv
 csv_files = glob.glob(f"{location}/{args.prefix}*")
 raw_values = []
+
+columns = args.columns
+if columns is None:
+    header = 0
+else:
+    header = None
+    processed_cols = columns.split(",")
+
 for index, csv in enumerate(csv_files):
     print(f"[{index}] Processing {csv}")
-    df = pd.read_csv(csv, sep=',', header=None)
+    df = pd.read_csv(csv, sep=',', header=header)
     raw_values.append(df.values)
 
+if columns is None:
+    columns = df.columns
 try:
     raw_array = np.concatenate(raw_values, axis=0)
-    df_merged = pd.DataFrame(raw_array, columns=[args.columns])
+    df_merged = pd.DataFrame(raw_array, columns=columns)
 except ValueError as e:
     print("Error: %s" % e)
     sys.exit(1)
