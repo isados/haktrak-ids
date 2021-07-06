@@ -26,7 +26,7 @@ def UrlFileHandler(file: IO[str]) -> "Callable[[Any], None]":
 			print(f'\n{timestamp} : {src_ip} — {method} — http://{host}{path}')
 
 			# Write to csv
-			data =f'{timestamp},http://{host}{path}\n'
+			data: str =f'{timestamp},http://{host}{path}\n'
 			file.write(data)
 		return None
 	return url_sniffer
