@@ -17,10 +17,12 @@ from sklearn.metrics import confusion_matrix, classification_report
 def get_configs(config_file: str="config.yml") -> dict:
     try:
         with open(config_file, 'r', newline='') as f:
-            return yaml.load(f, Loader=yaml.Loader)
+            content = yaml.load(f, Loader=yaml.Loader)
+            if content is None:
+                raise ValueError("Not a valid config file")
+            return content
     except yaml.YAMLError as ymlexcp:
-        print(ymlexcp)
-        return None
+        raise ymlexcp("not sure")
 
 # Decorator for most functions
 def latest_config(func):
