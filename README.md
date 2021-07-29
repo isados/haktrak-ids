@@ -41,6 +41,12 @@ For Malicious URL attacks (using CSV as input)
 ```
 ~> pipenv run ./predictMaliciousUrls.py test.csv
 ```
+
+## Sniffing URLs
+The following script stores sniffed urls as records in a CSV
+```bash
+sudo ./sniff-urls.py
+```
 ###### Ensure that the CSV has a single field called `urls`
 
 ---
