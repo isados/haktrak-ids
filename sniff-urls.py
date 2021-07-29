@@ -23,7 +23,7 @@ def UrlFileHandler(file: IO[str]) -> "Callable[[Any], None]":
 			timestamp: str = datetime.now().astimezone().isoformat(timespec='microseconds')
 
 			# Print out URL details
-			print(f'\n{timestamp} : {src_ip} — {method} — http://{host}{path}')
+			# print(f'\n{timestamp} : {src_ip} — {method} — http://{host}{path}')
 
 			# Write to csv
 			data: str =f'{timestamp},http://{host}{path}\n'
@@ -40,10 +40,13 @@ if __name__ == '__main__':
 		with tempfile.NamedTemporaryFile(mode='w', dir=DEST_FOLDER, prefix='urls-',
 						 suffix='.csv', delete=False) as file:
 			file.write("timestamp,url\n")
+			print("Currently sniffing. you may browse any site... press CTRL + C to exit")
 			sniff(filter='tcp', prn=UrlFileHandler(file))
 
-			userid: str = str(os.getenv('SUDO_UID'))
-			groupid: str = str(os.getenv('SUDO_GID'))
-			os.chown(file.name, int(userid), int(groupid))
 	except PermissionError as perror:
 		print("Permission Error: run this file as root user")
+	else:
+		print(f"\nCSV stored as {os.path.relpath(file.name)}")
+		userid: str = str(os.getenv('SUDO_UID'))
+		groupid: str = str(os.getenv('SUDO_GID'))
+		os.chown(file.name, int(userid), int(groupid))
